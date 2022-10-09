@@ -4,6 +4,7 @@
 #Начните с запроса у пользователя координат x и y первой точки многоугольника.Продолжайте
 #запрашивать координаты следующих точек фигуры, пока пользователь
 #не оставит строку ввода координаты по оси x пустой
+
 from dataclasses import dataclass
 from itertools import pairwise
 @dataclass()
@@ -25,7 +26,7 @@ class LineSegment:
 
         """Длина отрезка d2= (х2— х1)2+ (y2— y1)2"""
 
-        return round(((self.point2.x - self.point1.x) ** 2 + (self.point2.y - self.point1.y) ** 2) ** 0.5,1)
+        return round(((self.point2.x - self.point1.x) ** 2 + (self.point2.y - self.point1.y) ** 2) ** 0.5, 1)
 
 class Polygon(list):
 
@@ -55,14 +56,19 @@ point2 = Point(1, 5)
 line_seg = LineSegment(point1,point2)
 print(line_seg.length_line)
 
+
 pentagon = Polygon()
 
-pentagon.append(Point(0, 0))
-pentagon.append(Point(3, 4))
-pentagon.append(Point(3, 0))
-pentagon.append(Point(3, 7))
-pentagon.append(Point(3, 18))
-
+info = True
+while info:
+    x = input('Введите координату x: \n')
+    if x == '':
+        info = False
+        print('Ввод точек окончен')
+        break
+    else:
+        y = input('Введите координату y: \n')
+        pentagon.append(Point(int(x), int(y)))
 try:
     print(pentagon.perimeter)
 except ValueError as e:
