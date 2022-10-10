@@ -12,6 +12,7 @@ class Note:
 
     def __init__(self,
                  *,
+                 # ИСПРАВИТЬ: мне представляется сомнительной возможность существования экземпляра ноты со всеми атрибутами равными None — зачем добавили значения по умолчанию для pitch и octave?
                  pitch: Pitch = None,
                  octave: Octave = None,
                  accidental: Accidental = None,
@@ -24,6 +25,7 @@ class Note:
     def clone(self, **kwargs):
         """Клонирование и обновление словаря атрибутов."""
         clone_obj = deepcopy(self)
+        # КОММЕНТАРИЙ: очень хорошо
         clone_obj.__dict__.update(**kwargs)
         return clone_obj
 
@@ -35,6 +37,7 @@ class ScoreNote(Note):
                  *,
                  stem_up: bool,
                  beam: bool = False,
+                 # ИСПРАВИТЬ: аналогично для pitch и octave — и не забудьте о порядке задания параметров, обладающих и не обладающих значениями по умолчанию
                  pitch: Pitch = None,
                  octave: Octave = None,
                  accidental: Accidental = None,
@@ -50,6 +53,7 @@ class MIDINote(Note):
     def __init__(self,
                  *,
                  velocity: int,
+                 # ИСПРАВИТЬ: аналогично для pitch и octave
                  pitch: Pitch = None,
                  octave: Octave = None,
                  accidental: Accidental = None,
@@ -63,8 +67,11 @@ pot = Note(pitch=Pitch.C, octave=Octave.S_CONTRA, accidental=Accidental.NATURAL)
 midi_c3 = MIDINote(pitch=Pitch.C, octave=Octave.LINE_1, velocity=80)
 midi_d3 = midi_c3.clone(pitch=Pitch.D, octave=Octave.S_CONTRA)
 
-print(midi_d3.clone().octave)
+print(midi_d3.clone().pitch)
 
 
 # ДОБАВИТЬ: под меткой tests закомментированные результаты выполнения скрипта с различными входными данными
 # tests:
+
+
+# ИТОГ: очень хорошо — 5/6
