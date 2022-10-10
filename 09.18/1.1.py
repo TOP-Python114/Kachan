@@ -64,14 +64,20 @@ class Verifier:
 
 
 class MagicSquareGenerator:
+    # ИСПРАВИТЬ: если вы пишете комментарий, то размещайте его над комментируемой строкой; так, этот комментарии разумнее отнести к атрибуту
     # num - размерность матрицы
     def __init__(self, num):
+        # ИСПОЛЬЗОВАТЬ: если же вы хотите описать параметры метода, то это можно сделать в строке документации:
+        """
+        :param num: размерность матрицы
+        """
         self.generator = Generator()
         self.splitter = Splitter()
         self.verifier = Verifier()
         self.num = num
 
     def make_magic_square(self):
+        # ИСПРАВИТЬ: документацию метода или функции принято начинать с глагола и писать так, чтобы первое предложение документации отвечало на вопрос "что делает метод/функция?"
         """метод выводит магический квадрат"""
         while True:
             self.array = [self.generator.generate(self.num) for j in range(self.num)]

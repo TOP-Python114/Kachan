@@ -14,18 +14,24 @@ class Carrier(ABC):
         pass
 
 
+# ДОБАВИТЬ: документацию класса
 class Cargo(Carrier):
+    # ДОБАВИТЬ: документацию метода
     def carry_military(self, items):
         print("The plane carries", items, "military goods")
 
+    # ДОБАВИТЬ: документацию метода
     def carry_commercial(self, items):
         print("The plane carries", items, "commercial goods")
 
 
+# ДОБАВИТЬ: документацию класса
 class Passenger(Carrier):
+    # ДОБАВИТЬ: документацию метода
     def carry_military(self, passengers):
         print("The plane carries", passengers, "soldiers")
 
+    # ДОБАВИТЬ: документацию метода
     def carry_commercial(self, passengers):
         print("The plane carries", passengers, "passengers")
 
@@ -48,9 +54,11 @@ class Commercial(Plane):
         self.carrier = carrier
         self.objects = objects
 
+    # ДОБАВИТЬ: документацию метода
     def display_description(self):
         self.carrier.carry_commercial(self.objects)
 
+    # ДОБАВИТЬ: документацию метода
     def add_objects(self, new_objects):
         self.objects += new_objects
 
@@ -62,11 +70,16 @@ class Military(Plane):
         self.carrier = carrier
         self.objects = objects
 
+    # ДОБАВИТЬ: документацию метода
     def display_description(self):
         self.carrier.carry_military(self.objects)
 
+    # ДОБАВИТЬ: документацию метода
     def add_objects(self, new_objects):
         self.objects += new_objects
+
+
+# КОММЕНТАРИЙ: прописывание документации и комментариев очень помогает систематизировать своё понимание кода, что особенно полезно во время обучения
 
 
 cargo = Cargo()
