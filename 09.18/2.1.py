@@ -66,6 +66,7 @@ class Commercial(Plane):
 class Military(Plane):
     """Наследование от Plane и создание класса военного самолета"""
 
+    # ИСПРАВИТЬ: этот конструктор полностью повторяет таковой в родственном классе Commercial — во избежание дублирования кода стоит вынести метод в базовый класс
     def __init__(self, carrier: Carrier, objects):
         self.carrier = carrier
         self.objects = objects
@@ -75,6 +76,7 @@ class Military(Plane):
         self.carrier.carry_military(self.objects)
 
     # ДОБАВИТЬ: документацию метода
+    # ИСПРАВИТЬ: аналогично — если нет разницы между методами в родственных классах, то имеет смысл заменить абстрактный метод на обычный и наследовать его
     def add_objects(self, new_objects):
         self.objects += new_objects
 
@@ -98,3 +100,6 @@ commercial.display_description()
 
 # ДОБАВИТЬ: под меткой tests закомментированные результаты выполнения скрипта с различными входными данными
 # tests:
+
+
+# ИТОГ: очень хорошо — 5/6

@@ -14,6 +14,7 @@ class Generator:
     def generate(count: int):
         return [randint(1,9) for _ in range(count)]
 
+
 class Splitter:
     @staticmethod
     def split(array) -> list:
@@ -80,7 +81,11 @@ class MagicSquareGenerator:
         # ИСПРАВИТЬ: документацию метода или функции принято начинать с глагола и писать так, чтобы первое предложение документации отвечало на вопрос "что делает метод/функция?"
         """метод выводит магический квадрат"""
         while True:
-            self.array = [self.generator.generate(self.num) for j in range(self.num)]
+            self.array = [
+                self.generator.generate(self.num)
+                # ИСПОЛЬЗОВАТЬ: в случаях, когда мы не используем переменную цикла, мы можем в качестве имени использовать символ подчёркивания
+                for _ in range(self.num)
+            ]
             if self.verifier.verify(self.splitter.split(self.array)):
                 return self.array
 
