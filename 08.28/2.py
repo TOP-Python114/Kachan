@@ -6,34 +6,38 @@ from itertools import pairwise
 
 @dataclass()
 class Point:
+    """Описывает объект точки на плоскости в декартовой системе координат."""
     x: int
     y: int
 
 
 @dataclass
 class LineSegment:
-    """Определяет длину отрезка"""
+    """Описывает объект отрезка, заданного двумя точками."""
 
     point1: Point
     point2: Point
 
     @property
     def length_line(self) -> float:
-        """Длина отрезка d2= (х2— х1)2+ (y2— y1)2"""
+        """Возвращает округлённую до одного десятичного знака длину отрезка, как расстояние между двумя точками.
+
+        d = √(х2 — х1)² + (y2 — y1)²⌝
+        """
         dx = self.point2.x - self.point1.x
         dy = self.point2.y - self.point1.y
         return round((dx**2 + dy**2)**0.5, 1)
 
 
 class Polygon(list):
-    """Определяет многоугольник"""
+    """Описывает многоугольник, заданный тремя и более точками."""
 
     def __init__(self: list[Point]):
         super().__init__()
 
     @property
     def perimeter(self):
-        """Вычисляет периметр многоугольника при наличии трёх и более точек"""
+        """Вычисляет и возвращает периметр многоугольника как сумму длин отрезков между попарно взятыми точками."""
         if len(self) < 3:
             raise ValueError('Задайте минимум три точки для построения многоугольника')
         else:
@@ -48,7 +52,6 @@ point2 = Point(1, 5)
 
 line_seg = LineSegment(point1,point2)
 print(line_seg.length_line)
-
 
 pentagon = Polygon()
 

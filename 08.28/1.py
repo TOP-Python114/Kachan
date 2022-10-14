@@ -5,7 +5,7 @@ from typing import Optional
 
 
 class Commands:
-    """Оболочка командного интерпретатора"""
+    """Объект команды хранит в атрибутах имя и аргументы команды, позволяет выполнять команду и возвращать строку с результатом выполнения команды."""
 
     def __init__(self, command: str, args: str):
         self.command = command
@@ -13,21 +13,22 @@ class Commands:
         self.commands_dict = {}
 
     def __str__(self):
+        """Выводит словарь, содержащий команды."""
         return self.commands_dict
 
     def add_command(self):
-        """Добавление команд в словарь"""
+        """Добавляет команду в словарь."""
         self.commands_dict[self.command] = self.args
         return self.commands_dict
 
     def command_result(self):
-        """вывод результата"""
+        """Возвращает результат выполнения команды."""
         self.result = f'Операция {self.command} {self.args} успешно выполнена'
         return self.result
 
 
 class BraNSh:
-    """Инициализация логирования, начала работы"""
+    """Объект оболочки для выполнения команд хранит историю последних выполненных команд, журналирует выполняемые команды."""
 
     _count = 0
 
@@ -37,11 +38,11 @@ class BraNSh:
         self.todo = False
 
     def start(self):
-        """начало работы программы"""
+        """Запускает обработку команд."""
         self.todo = True
 
     def work_commands(self):
-        """выполнение команд"""
+        """Обрабатывает ввод команд и их аргументов."""
         if self.command == 'exit':
             return self.exit()
         elif self.command == 'help':
@@ -52,10 +53,10 @@ class BraNSh:
             raise TypeError(f'Неизвестная команда')
 
     def help(self):
-        """вывод справки"""
+        """Возвращает строку со справкой по использованию объекта оболочки."""
 
     def log(self):
-        """логирование и запись в файл"""
+        """Логирует выполняемые команды."""
         self.__class__._count += 1
         if self.__class__._count < 51:
             file_name = 'log_command_f.txt'
@@ -72,7 +73,7 @@ class BraNSh:
             return log_data
 
     def exit(self):
-        """выход из программы"""
+        """Завершает обработку команд."""
         self.todo = False
         print(self.command)
         sys.exit
