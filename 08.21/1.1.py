@@ -1,8 +1,7 @@
-from random import choice,shuffle
+from random import choice
 
 
 class Cards:
-
     """Случайный выбор игральной карты"""
 
     def __init__(self):
@@ -21,3 +20,7 @@ class Cards:
 
 deck = Cards()
 print(next(deck))
+
+
+# ДОБАВИТЬ: закомментированный вывод результатов нескольких запусков скрипта с различными входными данными (при наличии)
+# tests:
