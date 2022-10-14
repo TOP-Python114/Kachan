@@ -16,12 +16,12 @@ class Commands:
         """Выводит словарь, содержащий команды."""
         return self.commands_dict
 
-    def add_command(self):
+    def add_command(self) -> dict[str, str]:
         """Добавляет команду в словарь."""
         self.commands_dict[self.command] = self.args
         return self.commands_dict
 
-    def command_result(self):
+    def command_result(self) -> str:
         """Возвращает результат выполнения команды."""
         self.result = f'Операция {self.command} {self.args} успешно выполнена'
         return self.result
@@ -37,11 +37,11 @@ class BraNSh:
         self.args = command.args
         self.todo = False
 
-    def start(self):
+    def start(self) -> None:
         """Запускает обработку команд."""
         self.todo = True
 
-    def work_commands(self):
+    def work_commands(self) -> Optional[str]:
         """Обрабатывает ввод команд и их аргументов."""
         if self.command == 'exit':
             return self.exit()
@@ -52,10 +52,10 @@ class BraNSh:
         else:
             raise TypeError(f'Неизвестная команда')
 
-    def help(self):
+    def help(self) -> str:
         """Возвращает строку со справкой по использованию объекта оболочки."""
 
-    def log(self):
+    def log(self) -> str:
         """Логирует выполняемые команды."""
         self.__class__._count += 1
         if self.__class__._count < 51:
@@ -72,7 +72,7 @@ class BraNSh:
             file.write(f'{log_data}\n')
             return log_data
 
-    def exit(self):
+    def exit(self) -> None:
         """Завершает обработку команд."""
         self.todo = False
         print(self.command)

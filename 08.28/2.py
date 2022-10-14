@@ -32,11 +32,11 @@ class LineSegment:
 class Polygon(list):
     """Описывает многоугольник, заданный тремя и более точками."""
 
-    def __init__(self: list[Point]):
+    def __init__(self):
         super().__init__()
 
     @property
-    def perimeter(self):
+    def perimeter(self) -> float:
         """Вычисляет и возвращает периметр многоугольника как сумму длин отрезков между попарно взятыми точками."""
         if len(self) < 3:
             raise ValueError('Задайте минимум три точки для построения многоугольника')
