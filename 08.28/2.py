@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from itertools import pairwise
 
 
-@dataclass()
+@dataclass
 class Point:
     """Описывает объект точки на плоскости в декартовой системе координат."""
     x: int
@@ -19,7 +19,7 @@ class LineSegment:
     point2: Point
 
     @property
-    def length_line(self) -> float:
+    def length(self) -> float:
         """Возвращает округлённую до одного десятичного знака длину отрезка, как расстояние между двумя точками.
 
         d = √(х2 — х1)² + (y2 — y1)²⌝
@@ -42,7 +42,7 @@ class Polygon(list):
             raise ValueError('Задайте минимум три точки для построения многоугольника')
         else:
             return sum(
-                LineSegment(p1, p2).length_line
+                LineSegment(p1, p2).length
                 for p1, p2 in pairwise(self + [self[0]])
             )
 
@@ -51,7 +51,7 @@ point1 = Point(1, 2)
 point2 = Point(1, 5)
 
 line_seg = LineSegment(point1,point2)
-print(line_seg.length_line)
+print(line_seg.length)
 
 pentagon = Polygon()
 
