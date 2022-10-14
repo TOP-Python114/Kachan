@@ -22,7 +22,7 @@ class LineSegment:
     def length(self) -> float:
         """Возвращает округлённую до одного десятичного знака длину отрезка, как расстояние между двумя точками.
 
-        d = √(х2 — х1)² + (y2 — y1)²⌝
+        d = √(х2 - х1)² + (y2 - y1)²⌝
         """
         dx = self.point2.x - self.point1.x
         dy = self.point2.y - self.point1.y
@@ -34,6 +34,7 @@ class Polygon(list):
 
     def __init__(self):
         super().__init__()
+        # ДОБАВИТЬ: возможность инициализировать многоугольник заранее созданными объектами точек
 
     @property
     def perimeter(self) -> float:
@@ -43,6 +44,7 @@ class Polygon(list):
         else:
             return sum(
                 LineSegment(p1, p2).length
+                # КОММЕНТАРИЙ: за pairwise() хвалю
                 for p1, p2 in pairwise(self + [self[0]])
             )
 
@@ -50,22 +52,28 @@ class Polygon(list):
 point1 = Point(1, 2)
 point2 = Point(1, 5)
 
-line_seg = LineSegment(point1,point2)
+line_seg = LineSegment(point1, point2)
 print(line_seg.length)
 
 pentagon = Polygon()
 
-info = True
-while info:
-    x = input('Введите координату x: \n')
-    if x == '':
-        info = False
+# ИСПОЛЬЗОВАТЬ: не создавайте объекты, без которых можно обойтись
+while True:
+    x = input('\nВведите координату x: ')
+    # ИСПОЛЬЗОВАТЬ: достаточно проверки на истинность
+    if not x:
         print('Ввод точек окончен')
         break
     else:
-        y = input('Введите координату y: \n')
+        y = input('Введите координату y: ')
         pentagon.append(Point(int(x), int(y)))
 try:
     print(pentagon.perimeter)
 except ValueError as e:
     print(e)
+
+
+# КОММЕНТАРИЙ: документацию писать вам ещё учиться и учиться — относитесь к этому серьёзно, потому что написание документации отлично помогает упорядочить мысли и способствует самоанализу объектной модели и кода
+
+
+# ИТОГ: объектная модель и код довольно неплохие — 8/10
