@@ -45,6 +45,9 @@ class Dish(ABC):
 
 class Sushi(Dish):
     def __init__(self, portion:int):
+        """
+        :param portion: порция
+        """
         self.portion = portion
 
     def ingredients_dish(self):
