@@ -37,13 +37,13 @@ class WordCounter:
 
 
 class TextAdapter:
-    """Адаптер к обработчику"""
+    """Адаптер к обработчику."""
 
     def __init__(self, adapter: WordCounter):
         self.adapter = adapter
 
     def process_text(self, text):
-        """ Интерфейс обработчика, требуемого системой"""
+        """Интерфейс обработчика, требуемого системой."""
         words = self.adapter.get_all_words().items()
         return words
 
@@ -54,3 +54,9 @@ counter = WordCounter(text)
 adapter = TextAdapter(counter)
 parser.get_processed_text(adapter)
 
+
+# ДОБАВИТЬ: под меткой tests закомментированные результаты выполнения скрипта с различными входными данными
+# tests:
+
+
+# ИТОГ: очень хорошо — 5/6
