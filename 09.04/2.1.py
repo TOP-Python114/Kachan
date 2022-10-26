@@ -28,9 +28,10 @@ class Actor:
         self.role = role
 
     def to_create(self) -> dict:
-
         """
         Создает словарь с ролью и именем актера
+        :param name: наименование фильма
+        :param role: роль актера
         """
         self.films.update({self.role:self.name})
         return self.films
@@ -130,22 +131,26 @@ class FilmCardFactory:
 
 class CardIndex:
 
-    """
-    Создает общую картотеку фильмов
-    """
     list = []
     @classmethod
     def add_films(cls, film: FilmCard):
+        """
+        Создает общую картотеку фильмов
+        :param: film: объект фильма
+        """
         cls.list.append(film)
         return cls.list
 
 
 class FilmCardSearch:
-    """
-    Осуществляет поиск фильмов, в которых снимался актер
-    """
+
     @staticmethod
     def search(film: list, actor: str):
+        """
+        Осуществляет поиск фильмов, в которых снимался актер
+        :param film: наименование фильма
+        :param actor: имя актера
+        """
         result = []
         for elem in film:
             for i in elem.name_actor:

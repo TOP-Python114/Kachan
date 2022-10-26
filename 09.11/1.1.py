@@ -13,8 +13,9 @@ class Note:
     def __init__(self,
                  *,
                  # ИСПРАВИТЬ: мне представляется сомнительной возможность существования экземпляра ноты со всеми атрибутами равными None — зачем добавили значения по умолчанию для pitch и octave?
-                 pitch: Pitch = None,
-                 octave: Octave = None,
+                 #не разбираюсь в нотах, учту на будущее - тщательнее изучать объекты:)
+                 pitch: Pitch,
+                 octave: Octave,
                  accidental: Accidental = None,
                  duration: Duration = Duration.QUARTER):
         self.pitch = pitch
@@ -23,7 +24,7 @@ class Note:
         self.duration = duration
 
     def clone(self, **kwargs):
-        """Клонирование и обновление словаря атрибутов."""
+        """Клонирует и обновляет атрибуты словаря"""
         clone_obj = deepcopy(self)
         # КОММЕНТАРИЙ: очень хорошо
         clone_obj.__dict__.update(**kwargs)
