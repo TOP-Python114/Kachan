@@ -32,15 +32,15 @@ class Note:
 
 
 class ScoreNote(Note):
-    """Изображение музыкальной ноты в партитуре."""
+    """Отображает музыкальную ноту в партитуре."""
 
     def __init__(self,
                  *,
                  stem_up: bool,
                  beam: bool = False,
                  # ИСПРАВИТЬ: аналогично для pitch и octave — и не забудьте о порядке задания параметров, обладающих и не обладающих значениями по умолчанию
-                 pitch: Pitch = None,
-                 octave: Octave = None,
+                 pitch: Pitch,
+                 octave: Octave,
                  accidental: Accidental = None,
                  duration: Duration = Duration.QUARTER):
         super().__init__(pitch=pitch, octave=octave, accidental=accidental, duration=duration)
@@ -49,14 +49,14 @@ class ScoreNote(Note):
 
 
 class MIDINote(Note):
-    """Кодирование музыкальной ноты в MIDI протоколе."""
+    """Кодирует музыкальную ноту в MIDI протоколе."""
 
     def __init__(self,
                  *,
                  velocity: int,
                  # ИСПРАВИТЬ: аналогично для pitch и octave
-                 pitch: Pitch = None,
-                 octave: Octave = None,
+                 pitch: Pitch,
+                 octave: Octave,
                  accidental: Accidental = None,
                  duration: Duration = Duration.QUARTER):
         super().__init__(pitch=pitch, octave=octave, accidental=accidental, duration=duration)
