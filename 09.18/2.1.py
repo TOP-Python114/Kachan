@@ -100,6 +100,9 @@ commercial.display_description()
 
 # ДОБАВИТЬ: под меткой tests закомментированные результаты выполнения скрипта с различными входными данными
 # tests:
-
+# The plane carries 100 soldiers
+# The plane carries 125 soldiers
+# The plane carries 10 commercial goods
+# The plane carries 360 commercial goods
 
 # ИТОГ: очень хорошо — 5/6
