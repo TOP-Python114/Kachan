@@ -3,33 +3,38 @@ from time import perf_counter_ns, sleep
 
 # ИСПРАВИТЬ: имена — что такое function_of_time и func?
 # ДОБАВИТЬ: аннотации типов параметров и возвращаемого значения
-def function_of_time(func):
+def decorator_for_calculation_duration(function):
     # ИСПРАВИТЬ: документация функции/метода начинается с глагола и в одно предложение отвечает на вопрос "что делает функция/метод?"
-    """Декоратор для оценки времени выполнения функции.
-    Используйте модуль time, функции perf_counter и perf_counter_ns"""
-
+    #Используйте модуль time, функции perf_counter и perf_counter_ns
+    """Оценивает время выполнения функции"""
     # ИСПРАВИТЬ: сейчас ваш декоратор не может быть применён к тем функциям, которые принимают ключевые аргументы — что очевидно едва ли приемлемо для совершенно универсального декоратора
-    def wrapped(*args):
+    def wrapped(*args, **kwargs):
         start_time = perf_counter_ns()
         # ИСПРАВИТЬ: так вы засекли только время записи объекта в переменную start_time, но никак не время выполнения функции func()
-        result = (perf_counter_ns() - start_time)
-        res = func(*args)
-        print(f'Время выполнения: {result} нс')
-        return res
+        result_of_function = function(*args, **kwargs)
+        result_of_time = (perf_counter_ns() - start_time)
+        print(f'Время выполнения: {result_of_time} нс')
+        return result_of_function
     return wrapped
 
 
-@function_of_time
-def func(a, b):
+@decorator_for_calculation_duration
+def addition_function(a, b):
+    """
+    Осуществляет операцию сложения
+    :param a: первое слагаемое
+    :param b: второе слагаемое
+    """
     # ИСПОЛЬЗОВАТЬ: импортировали же функцию sleep(), почему бы не проверить: одна сотая секунды равна десяти миллионам наносекунд — а у вас выводится всё то же ~трёхзначное число наносекунд
     sleep(0.01)
     return a + b
 
 
-add_func = func(100, 50)
-print(f'Результат сложения: {add_func}\n')
+add_func_1 = addition_function(100, 50)
+print(f'Результат сложения: {add_func_1}\n')
 
-print(func(b=15, a=1))
+add_func2 = addition_function(b=15, a=1)
+print(f'Результат сложения: {add_func2}\n')
 
 
 # КОММЕНТАРИЙ: допускаю вероятность опечатки, но отловить эту опечатку вы должны были самостоятельно во время тестирования — это часть обучения и не менее важная, чем собственно изучение языка
@@ -37,10 +42,11 @@ print(func(b=15, a=1))
 
 # ИСПОЛЬЗОВАТЬ: закомментированный вывод результатов нескольких запусков скрипта с различными входными данными (при наличии)
 # tests:
-# Время выполнения: 300 нс
+# Время выполнения: 21743400 нс
 # Результат сложения: 150
-
-# ... TypeError: function_of_time.<locals>.wrapped() got an unexpected keyword argument 'b'
+#
+# Время выполнения: 15354000 нс
+# Результат сложения: 16
 
 
 # ИТОГ: невнимательный разработчик - это несчастный разработчик — 3/5
