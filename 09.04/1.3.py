@@ -1,8 +1,7 @@
-
 class HTMLElement:
-
-    """Формирует строку с HTML тегом"""
-
+    """
+    Формирует строку с HTML тегом
+    """
     default_indent_size = 4
 
     def __init__(self, name: str, value: str = "", **kwargs: str):
@@ -15,16 +14,16 @@ class HTMLElement:
         return self.__str()
 
     def __str(self, indent_lvl: int = 0):
+        """
+        Формирует строку вывода тэгов HTML
 
-        """Формирует строку вывода тэгов HTML
         :param indent_lvl: счетчик, используемый для расчета отступов строки
         """
-
         indent = ' ' * indent_lvl * self.__class__.default_indent_size
         ret = f'{indent}<{self.name}{self.kwargs}>{self.value}'
         if self.elements:
             for element in self.elements:
-                ret += '\n' + element.__str(indent_lvl+1)
+                ret += '\n' + element.__str(indent_lvl + 1)
             ret += f'\n{indent}</{self.name}>'
         else:
             ret += f'</{self.name}>'
@@ -32,7 +31,8 @@ class HTMLElement:
 
 
 class HTMLBuilder:
-
+    """
+    """
     def __init__(self, root: str | HTMLElement, **kwargs: str):
         if isinstance(root, str):
             self.__root = HTMLElement(root, **kwargs)
@@ -40,26 +40,26 @@ class HTMLBuilder:
             self.__root = root
 
     def add_child(self, name: str, value: str = "", **kwargs):
+        """
+        Добавляет новые тэги HTML
 
-        """Добавляет новые тэги HTML
         :param name: наименование тэга
         :param value: значение тэга
-        :param **kwargs: дополнительные элементы тэга
+        :param kwargs: дополнительные элементы тэга
         """
-
         self.__root.elements += [
             el := HTMLElement(name, value, **kwargs)
         ]
         return HTMLBuilder(el)
 
     def add_sibling(self, name: str, value: str = "", **kwargs: str):
+        """
+        Добавляет новые тэги HTML внутри предыдущего тега
 
-        """Добавляет новые тэги HTML внутри предыдущего тега
         :param name: наименование тэга
         :param value: значение тэга
-        :param **kwargs: дополнительные элементы тэга
-                """
-
+        :param kwargs: дополнительные элементы тэга
+        """
         self.__root.elements += [
             HTMLElement(name, value, **kwargs)
         ]
@@ -69,19 +69,17 @@ class HTMLBuilder:
         return str(self.__root)
 
     def to_html(self):
-
         """Записывает данные в HTML файл"""
-
-        with open('file.html', "w", encoding="utf8") as fp:
+        with open('file.html', "w", encoding="utf-8") as fp:
             fp.write(str(self))
         return self
 
 
+# noinspection PyAttributeOutsideInit
 class CVBuilder:
-
-    """Добавляет элементы и собирает данные в единую структуру
     """
-
+    Добавляет элементы и собирает данные в единую структуру
+    """
     contacts = {}
     projects = {}
 
@@ -91,41 +89,40 @@ class CVBuilder:
                  pos_name: str,
                  mail: str
                  ):
-
         self.fio = fio
         self.age = age
         self.pos_name = pos_name
         self.mail = mail
 
     def add_education(self, university, profession, year_end):
+        """
+        Добавляет информацию об университете, профессии и годе окончания
 
-        '''Добавляет информацию об университете, профессии и годе окончания
         :param university: университет
         :param profession: профессия
         :param year_end: год окончания
         :return: self
-        '''
-
+        """
         self.university = university
         self.profession = profession
         self.year_end = year_end
         return self
 
     def add_project(self, project, *image):
-
         """
         Добавляет данные о проекте
+
         :param project: проект
         :param image: ярлык проекта
         :return:
         """
-
-        self.projects.update({project : image})
+        self.projects.update({project: image})
         return self
 
     def add_contact(self, **contacts):
         """
         Добавляет данные о контактах
+
         :param contacts: контакты
         """
         self.contacts.update(contacts)
@@ -149,14 +146,20 @@ class CVBuilder:
                 info.add_sibling("p", f'{project}: {image}')
         return html
 
-person1 = CVBuilder('Иванов Иван Иванович', 26, 'художник-фрилансер', 'ivv@abc.de').add_education('Архитектурная Академия', 'Компьютерный дизайн', 2019)\
-.add_project('Разработка логотипа для компании по производству снеков','https://education.ru/1456')\
-.add_contact(devianart='ivovuvan_in_art')\
-.add_contact(telegram='@ivovuvan')\
-.add_project('UI разработка для интернет-магазина для восковых дел мастеров','https://education.ru/gghgj','https://education.ru/gghgj54546')\
-.build().to_html()
 
+person1 = CVBuilder('Иванов Иван Иванович', 26, 'художник-фрилансер', 'ivv@abc.de')\
+    .add_education('Архитектурная Академия', 'Компьютерный дизайн', 2019)\
+    .add_project('Разработка логотипа для компании по производству снеков',
+                 'https://education.ru/1456')\
+    .add_contact(devianart='ivovuvan_in_art')\
+    .add_contact(telegram='@ivovuvan')\
+    .add_project('UI разработка для интернет-магазина для восковых дел мастеров',
+                 'https://education.ru/gghgj',
+                 'https://education.ru/gghgj54546')\
+    .build().to_html()
 print(person1)
+
+
 # stdout:
 # <html>
 #     <head>

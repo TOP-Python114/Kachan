@@ -1,8 +1,7 @@
-
 class HTMLElement:
-
-    """Формирует строку с HTML тегом"""
-
+    """
+    Формирует строку с HTML тегом
+    """
     default_indent_size = 4
 
     def __init__(self, name: str, value: str = "", **kwargs: str):
@@ -15,11 +14,11 @@ class HTMLElement:
         return self.__str()
 
     def __str(self, indent_lvl: int = 0):
+        """
+        Формирует строку вывода тэгов HTML
 
-        """Формирует строку вывода тэгов HTML
         :param indent_lvl: счетчик, используемый для расчета отступов строки
         """
-
         indent = ' ' * indent_lvl * self.__class__.default_indent_size
         ret = f'{indent}<{self.name}{self.kwargs}>{self.value}'
         if self.elements:
@@ -32,7 +31,6 @@ class HTMLElement:
 
 
 class HTMLBuilder:
-
     def __init__(self, root: str | HTMLElement, **kwargs: str):
         if isinstance(root, str):
             self.__root = HTMLElement(root, **kwargs)
@@ -40,26 +38,26 @@ class HTMLBuilder:
             self.__root = root
 
     def add_child(self, name: str, value: str = "", **kwargs):
+        """
+        Добавляет новые тэги HTML
 
-        """Добавляет новые тэги HTML
         :param name: наименование тэга
         :param value: значение тэга
-        :param **kwargs: дополнительные элементы тэга
+        :param kwargs: дополнительные элементы тэга
         """
-
         self.__root.elements += [
             el := HTMLElement(name, value, **kwargs)
         ]
         return HTMLBuilder(el)
 
     def add_sibling(self, name: str, value: str = "", **kwargs: str):
+        """
+        Добавляет новые тэги HTML внутри предыдущего тега
 
-        """Добавляет новые тэги HTML внутри предыдущего тега
         :param name: наименование тэга
         :param value: значение тэга
-        :param **kwargs: дополнительные элементы тэга
+        :param kwargs: дополнительные элементы тэга
         """
-
         self.__root.elements += [
             HTMLElement(name, value, **kwargs)
         ]
@@ -69,11 +67,13 @@ class HTMLBuilder:
         return str(self.__root)
 
 
-body = HTMLBuilder('body', style = 'background-color:#f5bbe1')
-menu = body.add_child('div', style='color:blueviolet').add_child('ul')
-menu.add_child('li', 'File').add_child('p', 'New')\
-.add_sibling('p', 'Open')\
-.add_sibling('p', 'Save', style = 'font-size:18px')
+body = HTMLBuilder('body', style='background-color:#f5bbe1')
+menu = body.add_child('div', style='color:blueviolet')\
+           .add_child('ul')
+menu.add_child('li', 'File')\
+    .add_child('p', 'New')\
+    .add_sibling('p', 'Open')\
+    .add_sibling('p', 'Save', style='font-size:18px')
 menu.add_child('li', 'Edit')\
     .add_sibling('p', 'Undo')\
     .add_sibling('p', 'Redo')\
@@ -81,6 +81,7 @@ menu.add_child('li', 'Edit')\
     .add_sibling('p', 'Copy')\
     .add_sibling('p', '')
 print(body)
+
 
 # stdout:
 # <body style = "background-color:#f5bbe1">

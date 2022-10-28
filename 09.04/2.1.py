@@ -1,7 +1,7 @@
-#Разработайте класс FilmCard, который описывает карточку с информацией о фильме в каталоге онлайн-кинотеатра.
-#Используйте композицию для создания возможной связи с другими фильмами.
-#Около десяти полей у вас должно быть.
-#Реализуйте шаблон Фабрики для создания экземпляров FilmCard.
+# Разработайте класс FilmCard, который описывает карточку с информацией о фильме в каталоге онлайн-кинотеатра.
+# Используйте композицию для создания возможной связи с другими фильмами.
+# Около десяти полей у вас должно быть.
+# Реализуйте шаблон Фабрики для создания экземпляров FilmCard.
 
 from enum import Enum
 
@@ -30,6 +30,7 @@ class Actor:
     def to_create(self) -> dict:
         """
         Создает словарь с ролью и именем актера
+
         :param name: наименование фильма
         :param role: роль актера
         """
@@ -67,9 +68,16 @@ class FilmCard:
         self.actor = actor
 
     def __str__(self):
-        return f'Фильм: {self.name}\n\tID: {self.id}\n\tЖанр: {self.genre} \n\tГод: {self.year} \n\tПродолжительность: {self.duration} ' \
-               f'\n\tСтрана производства: {self.country}\n\tАктеры: {self.actor}\n\tОценка зрителей: {self.reviews_from_users}'\
-               f'\n\tОценка Критиков: {self.reviews_from_critics}\n\tСлоган: {self.title}'
+        return (f'Фильм: {self.name}\n'
+                f'\tID: {self.id}\n'
+                f'\tЖанр: {self.genre}\n'
+                f'\tГод: {self.year}\n'
+                f'\tПродолжительность: {self.duration}\n'
+                f'\tСтрана производства: {self.country}\n'
+                f'\tАктеры: {self.actor}\n'
+                f'\tОценка зрителей: {self.reviews_from_users}\n'
+                f'\tОценка Критиков: {self.reviews_from_critics}\n'
+                f'\tСлоган: {self.title}')
 
     @property
     def name_film(self):
@@ -81,8 +89,9 @@ class FilmCard:
 
 
 class FilmCardFactory:
-
-    """Создаёт и нумерует экземпляры FilmCard, используя объект класса."""
+    """
+    Создаёт и нумерует экземпляры FilmCard, используя объект класса.
+    """
     id_ = 0
     dict_films = {}
 
@@ -98,15 +107,15 @@ class FilmCardFactory:
                  reviews_from_critics: int,
                  title: str
                  ):
-
         """
         Добавляет информацию о фильме и присваивает индекс
+
         :param name: наименование фильма
         :param genre: жанр
         :param year: год выпуска
         :param duration: продолжительность
         :param country: страна
-        :param actor: актер\актеры
+        :param actor: актер/актёры
         :param reviews_from_users: оценка зрителей
         :param reviews_from_critics: оценка критиков
         :param title: слоган
@@ -125,17 +134,19 @@ class FilmCardFactory:
                         actor,
                         reviews_from_users,
                         reviews_from_critics,
-                        title
-                        )
+                        title)
 
 
 class CardIndex:
-
+    """
+    """
     list = []
+
     @classmethod
     def add_films(cls, film: FilmCard):
         """
         Создает общую картотеку фильмов
+
         :param: film: объект фильма
         """
         cls.list.append(film)
@@ -143,11 +154,14 @@ class CardIndex:
 
 
 class FilmCardSearch:
+    """
+    """
 
     @staticmethod
     def search(film: list, actor: str):
         """
         Осуществляет поиск фильмов, в которых снимался актер
+
         :param film: наименование фильма
         :param actor: имя актера
         """
@@ -188,6 +202,7 @@ card.add_films(film1)
 card.add_films(film2)
 card_film = card.add_films(film3)
 print(FilmCardSearch.search(card_film,'Джейк Джилленхол'))
+
 
 # Фильм: Послезавтра
 # 	ID: 1
