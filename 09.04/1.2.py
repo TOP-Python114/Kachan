@@ -8,7 +8,12 @@ class HTMLElement:
         self.name = name
         self.value = value
         self.elements: list['HTMLElement'] = []
-        self.kwargs = "".join([f' {i} = "{j}"' for i, j in kwargs.items()])
+        # ИСПРАВИТЬ: kwargs — сокращение от keyword arguments, для атрибута такое имя едва ли подходит, непонятно, какие аргументы в атрибуте
+        self.kwargs = "".join([
+            # ИСПРАВИТЬ: имена i, j, k традиционно используются для индексов — не смущайте тех, кто будет читать ваш код
+            f' {i} = "{j}"'
+            for i, j in kwargs.items()
+        ])
 
     def __str__(self):
         return self.__str()
@@ -30,7 +35,9 @@ class HTMLElement:
         return ret
 
 
+# ДОБАВИТЬ: строку документации для класса
 class HTMLBuilder:
+    # ИСПРАВИТЬ здесь и в последующих методах: имя kwargs плохо отражает, что именно должно быть передано в этот параметр — используйте более нарицательное имя для параметра
     def __init__(self, root: str | HTMLElement, **kwargs: str):
         if isinstance(root, str):
             self.__root = HTMLElement(root, **kwargs)
@@ -67,6 +74,7 @@ class HTMLBuilder:
         return str(self.__root)
 
 
+# ДОБАВИТЬ: а если вам потребуется сформировать атрибут тэга class — как вы поступите, с учётом того, что данное слово является ключевым в python?
 body = HTMLBuilder('body', style='background-color:#f5bbe1')
 menu = body.add_child('div', style='color:blueviolet')\
            .add_child('ul')
@@ -103,3 +111,6 @@ print(body)
 #         </ul>
 #     </div>
 # </body>
+
+
+# ИТОГ: очень хорошо — 4/4
