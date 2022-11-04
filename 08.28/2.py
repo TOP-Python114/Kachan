@@ -32,7 +32,7 @@ class LineSegment:
 class Polygon(list):
     """Описывает многоугольник, заданный тремя и более точками."""
 
-    def __init__(self):
+    def __init__(self: list[Point]):
         super().__init__()
         # ДОБАВИТЬ: возможность инициализировать многоугольник заранее созданными объектами точек
 
@@ -55,24 +55,56 @@ point2 = Point(1, 5)
 line_seg = LineSegment(point1, point2)
 print(line_seg.length)
 
-pentagon = Polygon()
+pentagon_1 = Polygon()
 
 # ИСПОЛЬЗОВАТЬ: не создавайте объекты, без которых можно обойтись
+
+
+
+    # ИСПОЛЬЗОВАТЬ: достаточно проверки на истинность
+#
 while True:
     x = input('\nВведите координату x: ')
-    # ИСПОЛЬЗОВАТЬ: достаточно проверки на истинность
-    while x:
-        y = input('Введите координату y: ')
-        pentagon.append(Point(int(x), int(y)))
+    if not x:
+        break
+    y = input('Введите координату y: ')
+    pentagon_1.append(Point(int(x), int(y)))
 
-
-try:
-    print(pentagon.perimeter)
-except ValueError as e:
-    print(e)
+print(pentagon_1.perimeter)
+#test
+# 3.0
+#
+# Введите координату x: 4
+# Введите координату y: 5
+#
+# Введите координату x: 5
+# Введите координату y: 5
+#
+# Введите координату x: 5
+# Введите координату y: 5
+#
+# Введите координату x: 5
+# Введите координату y: 5
+#
+# Введите координату x: 5
+# Введите координату y: 5
+#
+# Введите координату x:
+# 2.0
 
 
 # КОММЕНТАРИЙ: документацию писать вам ещё учиться и учиться — относитесь к этому серьёзно, потому что написание документации отлично помогает упорядочить мысли и способствует самоанализу объектной модели и кода
 
 
 # ИТОГ: объектная модель и код довольно неплохие — 8/10
+point3 = Point(1, 4)
+point4 = Point(5, 4)
+point5 = Point(7, 12)
+pentagon_2 = Polygon()
+pentagon_2.append(point3)
+pentagon_2.append(point4)
+pentagon_2.append(point5)
+print(pentagon_2.perimeter)
+
+#test
+#22.2
