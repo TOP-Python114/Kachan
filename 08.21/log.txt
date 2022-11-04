@@ -1,0 +1,18 @@
+2022-11-04 12:11:29.495721 checkhand 
+Args:(10, 0) 
+Kwargs: {}
+2022-11-04 12:11:29.496722 checkhand 
+Args:() 
+Kwargs: {'a': 99, 'b': 2, 'c': 45}
+2022-11-04 12:11:29.497727 add_str 
+Args:() 
+Kwargs: {'a': 'Hello', 'b': 'world'}
+2022-11-04 12:11:54.145773 checkhand 
+Args:(10, 0) 
+Kwargs: {}
+2022-11-04 12:11:54.146778 checkhand 
+Args:() 
+Kwargs: {'a': 99, 'b': 2, 'c': 45}
+2022-11-04 12:11:54.147771 add_str 
+Args:() 
+Kwargs: {'a': 'Hello', 'b': 'world'}

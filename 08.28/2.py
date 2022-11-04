@@ -61,12 +61,11 @@ pentagon = Polygon()
 while True:
     x = input('\nВведите координату x: ')
     # ИСПОЛЬЗОВАТЬ: достаточно проверки на истинность
-    if not x:
-        print('Ввод точек окончен')
-        break
-    else:
+    while x:
         y = input('Введите координату y: ')
         pentagon.append(Point(int(x), int(y)))
+
+
 try:
     print(pentagon.perimeter)
 except ValueError as e:
