@@ -24,10 +24,8 @@
 #- выполнение команды -> str
 # Остальные атрибуты и методы продумайте самостоятельно.
 
-from typing import Optional
+
 from datetime import datetime as dt
-from sys import exit
-from time import sleep
 
 
 class Command:
@@ -35,28 +33,27 @@ class Command:
 
     # КОММЕНТАРИЙ: этот класс предназначен для одной команды
 
-    def __init__(self, command: str, args: str):
-        self.command = command
-        self.args = args
+    def __init__(self, command: str, args: str = None):
+        self.__command = command
+        self.__args = args
         # УДАЛИТЬ: в описанной в условии модели объект команды не должен хранить информацию о других командах
-        self.history = {}
+
 
     # ИСПРАВИТЬ: здесь резонно выводить информацию о самой команде, а не о словаре
     def __str__(self):
-        """Выводит словарь, содержащий команды."""
-        return self.history
+        return f'Операция {self.command} {self.args} успешно выполнена'
 
     # УДАЛИТЬ: метод не отвечает требуемой объектной модели
-    def add(self) -> dict[str, str]:
-        """Добавляет команду в словарь."""
-        self.history[self.command] = self.args
-        return self.history
 
-    def execute(self) -> str:
-        """Возвращает результат выполнения команды."""
-        # КОММЕНТАРИЙ: хорошо, результат выполнения одной команды хранить в объекте команды можно, эту инициативу одобряю
-        self.result = f'Операция {self.command} {self.args} успешно выполнена'
-        return self.result
+    @property
+    def command(self) -> str:
+        """Возвращает наименование команды"""
+        return self.__command
+
+    @property
+    def args(self) -> str:
+        """Возвращает наименование аргументов команды"""
+        return self.__args
 
 
 class BraNSh:
@@ -64,26 +61,27 @@ class BraNSh:
 
     # ИСПОЛЬЗОВАТЬ: это должен быть атрибут, ограничивающей размер контейнера с объектами последних команд
     __count = 50
+    __allcount = 0
 
     # КОММЕНТАРИЙ: неверно поняли объектную модель — объект оболочки должен обеспечивать обработку различных команд, а не одной за раз
     # КОММЕНТАРИЙ: посмотрите как работает командная строка cmd или интерпретатор python в интерактивном режиме: приложение запускается (создаётся объект), после чего (старт обработки) обрабатывает столько команд, сколько введёт пользователь (обработка команд), до команды на выход из приложения (конец обработки)
 
-    def __init__(self, command: Optional[Command]):
+    def __init__(self):
         # УДАЛИТЬ: этих атрибутов здесь быть не должно
-        self.command = command.command
-        self.args = command.args
+        self.container = []
+        self.loging = True
         # УДАЛИТЬ: этот атрибут не используется
-        self.todo = False
         # ДОБАВИТЬ: а должен здесь быть атрибут для объекта контейнера, в котором должны храниться self.__class__.__count последних команд — а в параметрах конструктора следует прописать опциональный параметр для переопределения размера истории команд
         # ДОБАВИТЬ: также, должен быть атрибут для необходимости ведения журнала — и тоже опциональный параметр конструктора
 
     def start(self) -> None:
         """Запускает обработку команд."""
         # УДАЛИТЬ: что изменилось в поведении объекта оболочки с изменением этого атрибута? ничего
-        self.todo = True
+        print(f'Добро пожаловать!!!')
+        self.get_commands()
         # ДОБАВИТЬ: здесь вполне могут быть вывод строки с приветствием, версией приложения, вызов метода вывода справки — но главное, здесь должен быть вызов метода обработки
 
-    def get_commands(self) -> Optional[str]:
+    def get_commands(self) -> None:
         """Обрабатывает ввод команд и их аргументов."""
         # ДОБАВИТЬ: согласно условию, команды вы должны получать из стандартного потока ввода stdin — и реализовать такое поведение вы должны именно в данном методе
 
@@ -91,39 +89,110 @@ class BraNSh:
 
         # ДОБАВИТЬ: далее вы здесь, проверяете, относится ли команда к управлению оболочкой (вкл./выкл. журналирования, справка, выход), если нет, то выполняете команду, используя её метод, добавляете команду в свой контейнер истории команд, проверяете необходимость журналирования и так далее
 
+        self.__class__.__allcount += 1
+
+        command = input('Введите команду\n')
+        args = input('Введите аргументы\n')
+
+        self.add_command = Command(command, args)
+
+        self.container.append(self.add_command.command)
+
+        if self.add_command.command == 'help':
+            self.help()
+        elif self.add_command.command == 'exit':
+            self.exit()
+        elif self.add_command.command == 'changelog':
+            self.changelog()
+        elif self.add_command.command == 'attrib':
+            self.attrib()
+        elif self.add_command.command == 'at':
+            self.at()
+        elif self.add_command.command == 'cls':
+            self.cls()
+        elif self.add_command.command == 'color':
+            self.color()
+        elif self.add_command.command == 'dir':
+            self.dir()
+        else:
+            self.get_commands()
+
+    def changelog(self):
+        """Предоставляет возможность установить запись в файл либо ее отменить"""
+
+        self.loging = bool(int(input('Установите логирование 1 или 0\n ')))
+        if self.loging:
+            print(f'Логирование установлено')
+        else:
+            print(f'Логирование отменено')
+        return self.loging
+
+
+    def attrib(self) -> str:
+        """Изменяет атрибут файлов"""
+
+        print(f'Атрибут файла изменен')
+        self.__log()
+
+    def at(self) -> str:
+        """Позволяет управлять планировщиком задач"""
+
+        print(f'Задача установлена')
+        self.__log()
+
+    def dir(self) -> str:
+        """Отображает список файлов и папок из указанного каталога"""
+
+        print(f'Список файлов предоставлен')
+        self.__log()
+
+    def cls(self) -> str:
+        """Позволяет очищать экран"""
+
+        print(f'Экран очищен')
+        self.__log()
+
+    def color(self) -> str:
+        """Позволяет изменить цвет фона"""
+
+        print(f'Фон изменен')
+        self.__log()
+
     def help(self) -> str:
-        """Возвращает строку со справкой по использованию объекта оболочки."""
-        # ИСПОЛЬЗОВАТЬ: при наличии строки документации, ключевое слово pass не требуется
+        """Возвращает строку со справкой по использованию объекта оболочки"""
+
+        print(f'Справка выполнена')
+        self.__log()
 
     # ИСПОЛЬЗОВАТЬ: вы не хотите, чтобы логированием можно было управлять снаружи объявления класса, поэтому здесь целесообразно использование защищённого атрибута
+
     def __log(self) -> str:
-        """Логирует выполняемые команды."""
+        """Осуществляет запись команд в файл"""
         # ИСПРАВИТЬ: ведение журнала в файле никак не связано с хранением последних введённых команд
-        self.__class__.__count += 1
-        if self.__class__.__count < 51:
-            file_name = 'log_command_f.txt'
+
+        if self.loging:
+            file_name = 'log.txt'
             # ИСПРАВИТЬ: ключ параметра mode указывать не требуется; требуется указывать использование кодировки utf-8
-            file = open(file_name, mode='a')
-            log_data = f'{dt.now()} {self.command} {self.args}'
-            file.write(f'{log_data}\n')
+            log_data = f'{dt.now()} {self.add_command.command}'
+            with open(file_name, 'a', encoding='utf-8') as fp:
+                fp.write(f'{log_data}\n')
             # ДОБАВИТЬ: все файлопотоки должны быть закрыты сразу по окончании работы с файлом!
-            return log_data
-        else:
-            self.__class__.__count = 1
-            file_name = 'log_command_f.txt'
-            file = open(file_name, mode='w')
-            log_data = f'{dt.now()} {self.command} {self.args}'
-            file.write(f'{log_data}\n')
-            return log_data
+        self.get_commands()
 
     def exit(self) -> None:
-        """Завершает обработку команд."""
+        """Завершает обработку команд"""
         # УДАЛИТЬ: так ни разу и не был проверен
-        self.todo = False
+        i = 0
         # КОММЕНТАРИЙ: нигде не видел, чтобы оболочка командной строки перед закрытием выводила список всех введённых команд, но ваша воля — это хотя бы забавно
-        print(self.command)
+        if self.__class__.__allcount > self.__class__.__count:
+            i = self.__class__.__allcount - self.__class__.__count
+        print(f'Список введенных команд {self.container[i:self.__class__.__allcount]}')
+        print(f'Завершение работы')
         # ИСПРАВИТЬ: exit — это функция
-        exit
+
+
+br = BraNSh()
+br.start()
 
 
 # КОММЕНТАРИЙ: в коде верхнего уровня мы должны создать экземпляр оболочки, после чего от этого экземпляра запустить обработку команд — всё остальное должен делать сам объект оболочки
