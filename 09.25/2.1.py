@@ -61,7 +61,7 @@ class Client:
                 print(msg)
                 break
         else:
-            print('Запрос не авторизирован')
+            print(f'Запрос не авторизирован')
 
 
 client = Client()
@@ -131,35 +131,35 @@ class Http404handler(Handler):
     """Обработчик для кода 404"""
     def handle(self, code) -> str:
         if code == 404:
-            print('Страница не найдена')
+            print(f'Страница не найдена')
         super().handle(code)
 
 class Http401handler(Handler):
     """Обработчик для кода 401"""
     def handle(self, code) -> str:
         if code == 401:
-            print('Неавторизированный запрос')
+            print(f'Неавторизированный запрос')
         super().handle(code)
 
 class Http200handler(Handler):
     """Обработчик для кода 200"""
     def handle(self, code) -> str:
         if code == 200:
-            print('Запрос выполнен успешно')
+            print(f'Запрос выполнен успешно')
         super().handle(code)
 
 class Http403handler(Handler):
     """Обработчик для кода 403"""
     def handle(self, code) -> str:
         if code == 403:
-            print('Доступ к ресурсу запрещен')
+            print(f'Доступ к ресурсу запрещен')
         super().handle(code)
 
 class Http500handler(Handler):
     """Обработчик для кода 500"""
     def handle(self, code) -> str:
         if code == 500:
-            print('Ошибка сервера')
+            print(f'Ошибка сервера')
         super().handle(code)
 
 
