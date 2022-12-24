@@ -1,4 +1,5 @@
 """Модель MVC."""
+from __future__ import annotations
 
 from pathlib import Path
 import re
@@ -6,8 +7,8 @@ import re
 
 class Email:
     """Описывает модель взаимодействия и хранения email адресов."""
-    file_path: str | Path = 'emails.txt'
-    
+    file_path = 'emails.txt'
+
     def __init__(self, email: str):
         self.email = email
 
