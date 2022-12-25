@@ -1,5 +1,6 @@
 """Модель MVC."""
 
+# ОТВЕТИТЬ: зачем здесь __future__? вы работает на версии младше 3.10? до сих пор вроде обходились как-то
 from __future__ import annotations
 from re import fullmatch
 

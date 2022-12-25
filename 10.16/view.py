@@ -13,12 +13,14 @@ class CLIView:
         return email
 
     @staticmethod
-    def mistake() -> None:
+    def invalid_email() -> None:
         """Сообщает об ошибке"""
         print('Почта введена некорректно')
 
+    # ДОБАВИТЬ: вывод вопросов о сохранении и продолжении, получение соответствующего ввода
+
     @staticmethod
-    def answer() -> None:
+    def valid_email() -> None:
         """Сообщает об отсутствии ошибок"""
         print('Ошибок не обнаружено')
 
