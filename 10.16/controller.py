@@ -1,11 +1,7 @@
 """Контроллер MVC."""
 
-# КОММЕНТАРИЙ: при импорте модулей своего проекта желательно использовать инструкцию import, а не from...import... — это уменьшает вероятность закольцовывания импорта
-# УДАЛИТЬ: экземпляр контроллера должен получать необходимые объекты в конструкторе, следовательно вам не нужны эти импорты здесь — для этого создавался модуль входа
-import model
-import view
-
 from enum import Enum
+
 
 class UserAnswer(str, Enum):
     YES = 1
@@ -13,9 +9,12 @@ class UserAnswer(str, Enum):
 
 
 class Application:
-    """Контроллер"""
-
-    def __init__(self, view: 'CLIView', model:'Email'):
+    """
+    Контроллер
+    """
+    def __init__(self,
+                 view: 'CLIView',
+                 model: 'Email'):
         self.view = view
         self.model = model
         self.em = None
@@ -38,7 +37,6 @@ class Application:
 
     def save_email(self) -> None:
         """Записывает в файл"""
-
         save_or_not = input("Сохранить?\n").lower()
         if save_or_not == UserAnswer.YES.value:
             self.em.save()
@@ -50,6 +48,5 @@ class Application:
 
     def end(self) -> None:
         """Завершает работу"""
-
         self.view.end_view()
 

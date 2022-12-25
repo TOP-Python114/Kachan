@@ -1,8 +1,7 @@
 """Модель MVC."""
-from __future__ import annotations
 
-from pathlib import Path
-import re
+from __future__ import annotations
+from re import fullmatch
 
 
 class Email:
@@ -19,9 +18,9 @@ class Email:
 
     @email.setter
     def email(self, value: str):
-        """Проверяет, является ли переданныя строка корректным email адресом, и устанавливает значение поля __email."""
+        """Проверяет, является ли переданная строка корректным email адресом, и устанавливает значение поля __email."""
         pattern = r'\b[a-zA-Z0-9_.-]+@[a-zA-Z0-9.-]+\.[A-Z|a-z]{2,}\b'
-        if re.fullmatch(pattern, value):
+        if fullmatch(pattern, value):
             self.__email = value
         else:
             raise ValueError(f'Invalid email address: {value}')
@@ -30,3 +29,4 @@ class Email:
         """Добавляет значение поля __email в файл."""
         with open(self.file_path, 'a', encoding='utf-8') as fileout:
             fileout.write(self.email + '\n')
+

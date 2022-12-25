@@ -26,3 +26,4 @@ class CLIView:
     def end_view() -> None:
         """Сообщает о завершении работы"""
         print('До свидания')
+
