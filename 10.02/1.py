@@ -1,7 +1,9 @@
 # импорт из стандартной библиотеки
+import builtins
 from dataclasses import dataclass
 from enum import Enum
-import re
+from functools import partial
+from re import match
 from string import ascii_lowercase as a_lc
 from typing import Optional
 
@@ -96,14 +98,13 @@ class Chessboard(dict):
         """
         Вертикаль игровой доски.
         """
-
         def __init__(self, file: str, start_color: SquareColor):
             super().__init__()
             for i in range(4):
                 for j in range(2):
-                    rank = i * 2 + j + 1
+                    rank = i*2 + j + 1
                     self[rank] = Square(
-                        list(SquareColor)[start_color - j],
+                        list(SquareColor)[start_color-j],
                         file,
                         str(rank)
                     )
@@ -114,7 +115,7 @@ class Chessboard(dict):
         for i in range(8):
             for _ in range(4):
                 for j in range(2):
-                    self[a_lc[i]] = self.__class__.File(a_lc[i], list(SquareColor)[j - i % 2])
+                    self[a_lc[i]] = self.__class__.File(a_lc[i], list(SquareColor)[j-i%2])
         self.__post_init__()
 
     def __post_init__(self):
@@ -145,13 +146,15 @@ class Chessboard(dict):
         """Возвращает горизонталь игровой доски."""
         return [file[number] for file in self.values()]
 
-    def __getitem__(self, key: str):
+    def __getitem__(self, key: str | int):
         """Обеспечивает вариативный доступ к полям игровой доски."""
-        if re.match(r'^[a-h][1-8]$', key := str(key).lower()):
+        # ИСПОЛЬЗОВАТЬ: экземпляр Chessboard представляет из себя словарь, во время инициализации он заполняется вертикалями экземплярами File с ключами от 'a' до 'h'; а метод __rank() принимает int и возвращает горизонталь — переопределение __getitem__() нужно, чтобы иметь возможность от экземпляра шахматной доски быстро получить доступ и к вертикали, и к горизонтали
+        key = str(key).lower()
+        if match(r'^[a-h][1-8]$', key):
             return super().__getitem__(key[0])[int(key[1])]
-        elif re.match(r'^[a-h]$', key):
+        elif match(r'^[a-h]$', key):
             return super().__getitem__(key)
-        elif re.match(r'^[1-8]$', key):
+        elif match(r'^[1-8]$', key):
             return self.__rank(int(key))
         else:
             raise KeyError
@@ -174,7 +177,6 @@ class Turn:
                  piece: Optional[Piece],
                  start_position: Optional[Square],
                  end_position: Optional[Square]):
-
         """
         :param piece: фигура
         :param start_position: начальное поле
@@ -187,11 +189,13 @@ class Turn:
         else:
             self.start = None
             self.end = None
+        # ДОБАВИТЬ: на конечном поле тоже может быть фигура — неплохо было бы это учесть (см. комментарий 1 к выводу)
 
     def __str__(self):
         return f'{self.piece}{self.start_position}{self.end_position}'
 
 
+# ДОБАВИТЬ: аннотации — везде
 class Game:
     """
     Класс управляет игровым полем
@@ -211,21 +215,26 @@ class Game:
         if piece:
             piece.move(self.board[end_position])
             turn = Turn(piece, self.board[start_position], self.board[end_position])
+            # ОТВЕТИТЬ: зачем счётчик ходов, если при отмене/возврате хода вы удаляете/добавляете последний элемент истории?
             self.count += 1
+            # ИСПРАВИТЬ: сильно сомневаюсь, что строка, как элемент истории, лучше экземпляра Turn
             self.elem = turn.__str__()
-            self._history.update({self.count:self.elem})
+            # ИСПРАВИТЬ: зачем словарь, если ключами у вас выступают целые числа? для этого довольно и списка
+            self._history.update({self.count: self.elem})
 
     def history(self):
         """Возвращает историю ходов"""
         return self._history
 
-    def restore(self):
+    def undo(self):
         """Возвращает фигуру на 1 ход назад"""
         if self.count > 0:
             self.last_position = self._history.pop(self.count)
             self.count -= 1
+            # ИСПРАВИТЬ: очень грустная история: ставить реализацию команды в зависимость от человеко-читаемого строкового представления экземпляра хода — попробуйте ещё
             self.last_position_start = str(self.last_position)[2:4]
             self.last_position_end = str(self.last_position)[4:6]
+            # ИСПРАВИТЬ: вот вроде бы и логично воспользоваться имеющимся методом, но обратили ли вы внимание, что при этом у вас появляется в истории запись "хода наоборот"? это может добавить вам проблем впоследствии (см. комментарий 2 к выводу)
             self.move(self.board[self.last_position_end], self.board[self.last_position_start])
             piece = self.board[self.last_position_end].piece
             turn = Turn(piece, self.board[self.last_position_start], self.board[self.last_position_end])
@@ -243,49 +252,40 @@ class Game:
         return turn
 
 
+
 game = Game()
+# УДАЛИТЬ: экземпляр доски у вас уже есть в соответствующем атрибуте экземпляра игры
 b = game.board
 
 print('Игровое поле:')
-# над визуалом игрового поля еще думаю
-print(game)
 
+# ИСПОЛЬЗОВАТЬ: новое значение по умолчанию для параметров sep и end функции print — чтобы не прописывать в каждом последующем print переопределения
+print = partial(print, sep='\n', end='\n\n')
+
+# КОММЕНТАРИЙ: подумайте над ним в задании 10.09
+# над визуалом игрового поля еще думаю
+
+# ИСПРАВИТЬ: именно для того, чтобы спокойно передавать сюда строки, я и прописывал __getitem__() в Chessboard
 game.move(b["e2"], b["e4"])
 game.move(b["e7"], b["e5"])
 game.move(b["d1"], b["h5"])
+# КОММЕНТАРИЙ: далековато коняга ускакал за один ход =) следующее задание как раз такие ходы должно проверять
 game.move(b["g8"], b["c6"])
 game.move(b["h5"], b["f7"])
 
 print(game)
 print(game.history())
-game.restore()
-print(game)
+game.undo()
+print('Отмена хода:', game)
+print(game.history())
 game.redo()
-game.move(b["f7"], b["h3"])
-print(game)
-print(game.history())
-game.move(b["e5"], b["d4"])
-print(game)
-print(game.history())
+print('Возврат хода:', game.history())
+
+
+# ИСПОЛЬЗОВАТЬ: возврат к встроенному вызываемому объекту print с его исходными значениями по умолчанию
+# print = builtins.print
 
 # Игровое поле:
-#  —————————————————————————————————————————
-#  | BR | BK | BB | BQ | BK | BB | BK | BR |
-#  —————————————————————————————————————————
-#  | BP | BP | BP | BP | BP | BP | BP | BP |
-#  —————————————————————————————————————————
-#  |    |    |    |    |    |    |    |    |
-#  —————————————————————————————————————————
-#  |    |    |    |    |    |    |    |    |
-#  —————————————————————————————————————————
-#  |    |    |    |    |    |    |    |    |
-#  —————————————————————————————————————————
-#  |    |    |    |    |    |    |    |    |
-#  —————————————————————————————————————————
-#  | WP | WP | WP | WP | WP | WP | WP | WP |
-#  —————————————————————————————————————————
-#  | WR | WK | WB | WQ | WK | WB | WK | WR |
-#  —————————————————————————————————————————
 #  —————————————————————————————————————————
 #  | BR | BK | BB | BQ | BK | BB |    | BR |
 #  —————————————————————————————————————————
@@ -303,7 +303,11 @@ print(game.history())
 #  —————————————————————————————————————————
 #  | WR | WK | WB |    | WK | WB | WK | WR |
 #  —————————————————————————————————————————
+#
 # {1: 'WPe2e4', 2: 'BPe7e5', 3: 'WQd1h5', 4: 'BKg8c6', 5: 'WQh5f7'}
+#
+# Отмена хода:
+# КОММЕНТАРИЙ 1: здесь видно, что чёрная пешка (BP) на f7, взятая белым ферзём (WQ), не восстановилась после отмены хода
 #  —————————————————————————————————————————
 #  | BR | BK | BB | BQ | BK | BB |    | BR |
 #  —————————————————————————————————————————
@@ -321,39 +325,14 @@ print(game.history())
 #  —————————————————————————————————————————
 #  | WR | WK | WB |    | WK | WB | WK | WR |
 #  —————————————————————————————————————————
-#  —————————————————————————————————————————
-#  | BR | BK | BB | BQ | BK | BB |    | BR |
-#  —————————————————————————————————————————
-#  | BP | BP | BP | BP |    |    | BP | BP |
-#  —————————————————————————————————————————
-#  |    |    | BK |    |    |    |    |    |
-#  —————————————————————————————————————————
-#  |    |    |    |    | BP |    |    |    |
-#  —————————————————————————————————————————
-#  |    |    |    |    | WP |    |    |    |
-#  —————————————————————————————————————————
-#  |    |    |    |    |    |    |    | WQ |
-#  —————————————————————————————————————————
-#  | WP | WP | WP | WP |    | WP | WP | WP |
-#  —————————————————————————————————————————
-#  | WR | WK | WB |    | WK | WB | WK | WR |
-#  —————————————————————————————————————————
-# {1: 'WPe2e4', 2: 'BPe7e5', 3: 'WQd1h5', 4: 'BKg8c6', 5: 'WQf7h5', 6: 'WQh5f7', 7: 'WQf7h3'}
-#  —————————————————————————————————————————
-#  | BR | BK | BB | BQ | BK | BB |    | BR |
-#  —————————————————————————————————————————
-#  | BP | BP | BP | BP |    |    | BP | BP |
-#  —————————————————————————————————————————
-#  |    |    | BK |    |    |    |    |    |
-#  —————————————————————————————————————————
-#  |    |    |    |    |    |    |    |    |
-#  —————————————————————————————————————————
-#  |    |    |    | BP | WP |    |    |    |
-#  —————————————————————————————————————————
-#  |    |    |    |    |    |    |    | WQ |
-#  —————————————————————————————————————————
-#  | WP | WP | WP | WP |    | WP | WP | WP |
-#  —————————————————————————————————————————
-#  | WR | WK | WB |    | WK | WB | WK | WR |
-#  —————————————————————————————————————————
-# {1: 'WPe2e4', 2: 'BPe7e5', 3: 'WQd1h5', 4: 'BKg8c6', 5: 'WQf7h5', 6: 'WQh5f7', 7: 'WQf7h3', 8: 'BPe5d4'}
+#
+# {1: 'WPe2e4', 2: 'BPe7e5', 3: 'WQd1h5', 4: 'BKg8c6', 5: 'WQf7h5'}
+#
+# Возврат хода:
+# КОММЕНТАРИЙ 2: пример потенциальной проблемы с добавлением в историю "хода наоборот" после стирания исходного
+# {1: 'WPe2e4', 2: 'BPe7e5', 3: 'WQd1h5', 4: 'BKg8c6', 5: 'WQf7h5', 6: 'WQh5f7'}
+
+
+# ИТОГ: для черновика неплохо, но нужно дорабатывать — 5/12
+
+# СДЕЛАТЬ: работу над ошибками и сообщить мне об этом
