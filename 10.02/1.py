@@ -1,30 +1,13 @@
-#В файле chess.py находится реализация ООП модели основных сущностей для игры шахматы.
-#Диаграмма классов модели в файле chess.png
-#Внимательно изучите код и взаимиодействие объектов между собой.
-#Реализуйте класс-хранитель Turn.
-#В нём должна сохраняться информация:
-#— о фигуре, сделавшей ход
-#— о клетке, с которой был сделан ход
-# — о клетке, на которую был сделан ход.
-#Реализуйте класс Game, который будет совмещать функции инициатора и опекуна.
-#С помощью этого класса у вас должны быть возможности:
-#— управлять экземпляром игровой доски
-#— совершать ходы с клетки на клетку
-#— хранить историю ходов
-#— выводить все записанные ходы, нумерованные с единицы
-#— возвращаться к началу заданного хода.
-#Классы Turn и Game должны быть встроены в существующую объектную модель.
-#Можно использовать импорт из файла chess.py
-
-
-
-from typing import Optional
+# импорт из стандартной библиотеки
 from dataclasses import dataclass
 from enum import Enum
-from string import ascii_lowercase as a_lc
-
 import re
+from string import ascii_lowercase as a_lc
+from typing import Optional
+
+# импорт дополнительных модулей
 import matrix
+
 
 class SquareColor(int, Enum):
     """
@@ -33,14 +16,12 @@ class SquareColor(int, Enum):
     LIGHT = 0
     DARK = 1
 
-
 class PieceColor(Enum):
     """
     Цвет фигуры.
     """
     WHITE = 0
     BLACK = 1
-
 
 class PieceKind(Enum):
     """
@@ -88,6 +69,7 @@ class Piece:
         self.square.piece = None
         self.square = end_square
         end_square.piece = self
+
 
 @dataclass
 class Square:
@@ -183,6 +165,7 @@ class Chessboard(dict):
             ),)
         return matrix.Matrix(res)
 
+
 class Turn:
     """
     Хранит информацию о сделанном ходе.
@@ -264,7 +247,7 @@ game = Game()
 b = game.board
 
 print('Игровое поле:')
-#над визуалом игрового поля еще думаю
+# над визуалом игрового поля еще думаю
 print(game)
 
 game.move(b["e2"], b["e4"])
