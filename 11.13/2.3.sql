@@ -7,13 +7,14 @@ select distinct
 d.`building`
     from `departments` as d
     join (
-        select 
+        select
         d.`building`,
         f.`name`,
         sum(f.`financing`) as count_financing
             from `departments` as d
             join `faculties` as f on f.`id` = d.`facultyid`
         group by f.`name`
+    -- КОММЕНТАРИЙ: подзапросам лучше всегда давать выделяющиеся псевдонимы, чтобы не путать с псевдонимами обычных таблиц
     ) as subq
     on subq.`building` = d.`building` and `count_financing` > 100000
 ;
@@ -28,11 +29,11 @@ count(l.`id`) as count_lecture
     join `departments` as d on d.`id` = gr.`departmentid`
     join `groupslectures` as gl on gr.`id` = gl.`groupid`
     join `lectures` as l on l.`id` = gl.`lectureid`
-where d.name  = 'Software Development' 
-    and gr.`year` = 5 
+where d.name  = 'Software Development'
+    and gr.`year` = 5
     and l.`date` between '2022-04-01' and '2022-04-07'
 group by gr.`name`
-having `count_lecture`>3
+having `count_lecture` > 3
 ;
 
 
@@ -47,14 +48,14 @@ with `rating` as (
         join `students` as s on s.`id` = gs.`studentid`
     group by gr.`name`
 )
-select  
+select
 `name`,
 `avg_raiting`
     from `rating`
 where `avg_raiting` > (
-    select 
+    select
     `avg_raiting`
-        from `rating` 
+        from `rating`
     where `name`= 'D221'
 );
 
@@ -69,14 +70,14 @@ with `teachers_salary` as (
     t.`isprofessor`
         from `teachers` as t
 )
-select  
+select
 `name`,
 `surname`
     from `teachers_salary`
 where `salary` > (
-    select 
-    avg(`salary`) 
-        from `teachers_salary` 
+    select
+    avg(`salary`)
+        from `teachers_salary`
     where `isprofessor` = 1
 );
 
@@ -110,9 +111,9 @@ select
 `avg_raiting`
     from `rating`
 where `avg_raiting` < (
-    select 
+    select
     min(`avg_raiting`)
-        from `rating` 
+        from `rating`
     where `year` = 5
 );
 
@@ -120,7 +121,7 @@ where `avg_raiting` < (
 /*7. Вывести названия факультетов, суммарный фонд финансирования кафедр которых больше суммарного фонда финансирования кафедр факультета “Computer Science”.*/
 
 with sum_financing as (
-    select 
+    select
     f.`name` as name_faculties,
     sum(d.`financing`) as count_financing
         from `departments` as d
@@ -131,9 +132,9 @@ select
 `name_faculties`
     from `sum_financing`
 where `count_financing` > (
-    select 
+    select
     `count_financing`
-       from `sum_financing` 
+       from `sum_financing`
     where `name_faculties` = 'Computer Science'
 );
 
@@ -151,19 +152,19 @@ with data as (
         join `teachers` as t on t.`id` = l.`teacherid`
     group by t.`name`, t.`surname`, s.`name`
 )
-select 
+select
 d.`name_teacher`,
 d.`name_surname`,
 d.`name_subject`
     from data as d
     join (
-        select 
+        select
         max(`count_lectures`) as max_lectures,
         `name_subject`
             from data
         group by `name_subject`
-    ) as dm 
-    on dm.`max_lectures` = d.`count_lectures` 
+    ) as dm
+    on dm.`max_lectures` = d.`count_lectures`
     and dm.`name_subject` = d.`name_subject`
 ;
 
@@ -178,16 +179,16 @@ with data as (
         join `lectures` as l on s.`id` = l.`subjectid`
     group by s.`name`
 )
-select 
+select
 d.`name_subject`
     from data as d
     join (
-        select 
+        select
         min(`count_lectures`) as min_lectures,
         `name_subject`
             from data
         group by `name_subject`
-    ) as dm 
+    ) as dm
     on dm.`min_lectures` = d.`count_lectures`
     and dm.`name_subject` = d.`name_subject`
 ;
@@ -205,3 +206,6 @@ count(distinct `studentid`) as count_students
     join `lectures` as l on l.`id` = gl.`lectureid`
 where d.`name` = 'Software Development'
 ;
+
+
+-- ИТОГ: отлично — 12/12

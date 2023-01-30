@@ -1,3 +1,4 @@
+-- КОММЕНТАРИЙ: если работаете с фиксированной БД, то лучше всегда добавлять в начало скрипта use — этот запрос заодно и указывает сразу на то, что скрипт предназначен конкретной БД, а не произвольной
 use academy;
 
 
@@ -6,7 +7,7 @@ use academy;
 select
 count(distinct t.`id`) as count_teachers
     from `teachers` as t
-    join `lectures`  as l on l.`teacherId` = t.`id`
+    join `lectures`  as l on l.`teacherid` = t.`id`
     join `groupslectures` as gl on gl.`lectureid` = l.`id`
     join `groups` as gr on gr.`id` = gl.`groupid`
     join `departments` as d on d.`id` = gr.`departmentid`
@@ -47,7 +48,8 @@ group by l.`lectureroom`
 /*5. Вывести количество студентов, посещающих лекции преподавателя “Jack Underhill”.*/
 
 select
-count( gs.`studentid`) as count_lectures
+-- ИСПРАВИТЬ: здесь тоже должно быть count(distinct ...), иначе вы посчитаете одинаковых студентов, которые приходят на разные лекции к одному преподавателю
+count(gs.`studentid`) as count_lectures
     from `groupslectures` as gl
     join `groupsstudents` as gs on gs.`groupid` = gl.`groupid`
     join `lectures`as l on gl.`lectureid` = l.`id`
@@ -72,7 +74,7 @@ where f.`name` = 'Computer Science'
 
 /*7. Вывести минимальное и максимальное количество студентов среди всех групп.*/
 
-select 
+select
     min(subq.`count_students`) as min_count_students,
     max(subq.`count_students`) as max_count_students
 from (
@@ -98,6 +100,7 @@ from `departments` as d
 
 select distinct
 count(l.`subjectid`) as count_subject,
+-- ИСПРАВИТЬ: судя по формулировке здесь конкатенация уже требуется
 t.`name` as teacher_name,
 t.`surname` as teacher_surname
     from `lectures` as l
@@ -109,10 +112,11 @@ order by 1 desc
 
 /*10. Вывести количество лекций в каждый день недели.*/
 
-select 
+select
 count(l.`id`) as count_lecture,
 dayofweek(`date`) as date_of_week
     from `lectures` as l
+-- КОММЕНТАРИЙ: группировку и сортировку можно проводить по псевдониму выражения выборки — date_of_week
 group by dayofweek(`date`)
 order by dayofweek(`date`)
 ;
@@ -159,3 +163,6 @@ count(l.`id`) as count_lecture
     join `teachers` as t on t.`id` = l.`teacherid`
 group by l.`lectureroom`, t.`name`, t.`surname`
 ;
+
+
+-- ИТОГ: отлично — 12/12

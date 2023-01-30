@@ -365,4 +365,8 @@ values
     (1, 20),
     (2, 21);
 
+-- КОММЕНТАРИЙ: в MySQL Workbench и MySQL Shell по умолчанию включен autocommit
 commit;
+
+
+-- ИТОГ: отлично — 6/6
