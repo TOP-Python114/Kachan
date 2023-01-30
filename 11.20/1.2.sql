@@ -16,6 +16,7 @@ create table if not exists `Sellers` (
     constraint `PK_id` primary key (`Id`),
     constraint `CH_Sellers_Name` check (`Name` <> ''),
     constraint `CH_Sellers_Surname` check (`Surname` <> '')
+    -- ДОБАВИТЬ: ограничение `телефон` <> '' — если указываете для столбца not null, то это очень часто также подразумевает отсутствие пустого значения
 );
 
 create table if not exists `Buyers` (
@@ -48,3 +49,6 @@ alter table `Sale`
     add constraint `FK_Sale_BuyerId`
         foreign key (`BuyerId`)
         references `Buyers` (`Id`);
+
+
+-- ИТОГ: очень хорошо — 7/8
