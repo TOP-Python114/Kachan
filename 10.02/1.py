@@ -148,7 +148,10 @@ class Chessboard(dict):
 
     def __getitem__(self, key: str | int):
         """Обеспечивает вариативный доступ к полям игровой доски."""
-        # ИСПОЛЬЗОВАТЬ: экземпляр Chessboard представляет из себя словарь, во время инициализации он заполняется вертикалями экземплярами File с ключами от 'a' до 'h'; а метод __rank() принимает int и возвращает горизонталь — переопределение __getitem__() нужно, чтобы иметь возможность от экземпляра шахматной доски быстро получить доступ и к вертикали, и к горизонтали
+        # ИСПОЛЬЗОВАТЬ: экземпляр Chessboard представляет из себя словарь, во время инициализации
+        # он заполняется вертикалями экземплярами File с ключами от 'a' до 'h'; а метод __rank()
+        # принимает int и возвращает горизонталь — переопределение __getitem__() нужно,
+        # чтобы иметь возможность от экземпляра шахматной доски быстро получить доступ и к вертикали, и к горизонтали
         key = str(key).lower()
         if match(r'^[a-h][1-8]$', key):
             return super().__getitem__(key[0])[int(key[1])]
@@ -180,7 +183,7 @@ class Turn:
         """
         :param piece: фигура
         :param start_position: начальное поле
-        :param end_position: конечное поле
+        :param end_position: конечное поле .
         """
         self.piece = piece
         if self.piece:
@@ -201,7 +204,7 @@ class Game:
     Класс управляет игровым полем
     """
     def __init__(self):
-        self._history = {}
+        self._history = []
         self.board = Chessboard()
         self.elem = ''
         self.count = 0
@@ -216,11 +219,10 @@ class Game:
             piece.move(self.board[end_position])
             turn = Turn(piece, self.board[start_position], self.board[end_position])
             # ОТВЕТИТЬ: зачем счётчик ходов, если при отмене/возврате хода вы удаляете/добавляете последний элемент истории?
-            self.count += 1
             # ИСПРАВИТЬ: сильно сомневаюсь, что строка, как элемент истории, лучше экземпляра Turn
-            self.elem = turn.__str__()
+            self.elem = turn
             # ИСПРАВИТЬ: зачем словарь, если ключами у вас выступают целые числа? для этого довольно и списка
-            self._history.update({self.count: self.elem})
+            self._history.append(self.elem)
 
     def history(self):
         """Возвращает историю ходов"""
@@ -234,7 +236,8 @@ class Game:
             # ИСПРАВИТЬ: очень грустная история: ставить реализацию команды в зависимость от человеко-читаемого строкового представления экземпляра хода — попробуйте ещё
             self.last_position_start = str(self.last_position)[2:4]
             self.last_position_end = str(self.last_position)[4:6]
-            # ИСПРАВИТЬ: вот вроде бы и логично воспользоваться имеющимся методом, но обратили ли вы внимание, что при этом у вас появляется в истории запись "хода наоборот"? это может добавить вам проблем впоследствии (см. комментарий 2 к выводу)
+            # ИСПРАВИТЬ: вот вроде бы и логично воспользоваться имеющимся методом, но обратили ли вы внимание,
+            # что при этом у вас появляется в истории запись "хода наоборот"? это может добавить вам проблем впоследствии (см. комментарий 2 к выводу)
             self.move(self.board[self.last_position_end], self.board[self.last_position_start])
             piece = self.board[self.last_position_end].piece
             turn = Turn(piece, self.board[self.last_position_start], self.board[self.last_position_end])
@@ -244,18 +247,18 @@ class Game:
     def __str__(self):
         return matrix.draw_matrices(self.board.to_matrix(), outer_borders=True)
 
-    def redo(self):
-        """Отменяет возврат фигуры на 1 ход"""
-        self.move(self.board[self.last_position_start], self.board[self.last_position_end])
-        piece = self.board[self.last_position_start].piece
-        turn = Turn(piece, self.board[self.last_position_start], self.board[self.last_position_end])
-        return turn
+    # def redo(self):
+    #     """Отменяет возврат фигуры на 1 ход"""
+    #     self.move(self.board[self.last_position_start], self.board[self.last_position_end])
+    #     piece = self.board[self.last_position_start].piece
+    #     turn = Turn(piece, self.board[self.last_position_start], self.board[self.last_position_end])
+    #     return turn
 
 
 
 game = Game()
 # УДАЛИТЬ: экземпляр доски у вас уже есть в соответствующем атрибуте экземпляра игры
-b = game.board
+
 
 print('Игровое поле:')
 
@@ -266,19 +269,19 @@ print = partial(print, sep='\n', end='\n\n')
 # над визуалом игрового поля еще думаю
 
 # ИСПРАВИТЬ: именно для того, чтобы спокойно передавать сюда строки, я и прописывал __getitem__() в Chessboard
-game.move(b["e2"], b["e4"])
-game.move(b["e7"], b["e5"])
-game.move(b["d1"], b["h5"])
+game.move(game.board["e2"], game.board["e4"])
+game.move(game.board["e7"], game.board["e5"])
+game.move(game.board["d1"], game.board["h5"])
 # КОММЕНТАРИЙ: далековато коняга ускакал за один ход =) следующее задание как раз такие ходы должно проверять
-game.move(b["g8"], b["c6"])
-game.move(b["h5"], b["f7"])
+game.move(game.board["g8"], game.board["c6"])
+game.move(game.board["h5"], game.board["f7"])
 
 print(game)
 print(game.history())
 game.undo()
 print('Отмена хода:', game)
 print(game.history())
-game.redo()
+#game.redo()
 print('Возврат хода:', game.history())
 
 
